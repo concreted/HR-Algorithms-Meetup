@@ -55,14 +55,45 @@ var Quadtree = function(box) {
 };
 
 Quadtree.prototype.insert = function(point) {
+    if (this.point === null) {
+	this.point = point;
+    }
+    
+    else {
+	var quad = this.box.findQuadrantForPoint(point);
 
+	if (this[quad] === null) {
+	    this[quad] = new Quadtree(this.box.getQuadrant(quad));
+	}
+
+	this[quad].insert(point);
+
+    }
 };
 
 Quadtree.prototype.findPointsWithin = function(searchBox) {
+    var solution = [];
+
+    //console.log(this.point);
+
+    if (searchBox.contains(this.point)) {
+	solution.push(this.point);
+    }
+    
+    if (this.SW !== null && searchBox.overlaps(this.SW.box)) {solution = solution.concat(this.SW.findPointsWithin(searchBox))}
+    if (this.SE !== null && searchBox.overlaps(this.SE.box)) {solution = solution.concat(this.SE.findPointsWithin(searchBox))}
+    if (this.NW !== null && searchBox.overlaps(this.NW.box)) {solution = solution.concat(this.NW.findPointsWithin(searchBox))}
+    if (this.NE !== null && searchBox.overlaps(this.NE.box)) {solution = solution.concat(this.NE.findPointsWithin(searchBox))}
+    
+    //console.log(solution); 
+    
+    return solution;
 
 };
 
 Quadtree.prototype.findNearestPointTo = function(target) {
+    // From lecture
+    
 
 };
 
