@@ -92,8 +92,33 @@ Quadtree.prototype.findPointsWithin = function(searchBox) {
 };
 
 Quadtree.prototype.findNearestPointTo = function(target) {
-    // From lecture
+    if (!this.point) return null;
     
+    var searchBox = new Box(target.x-1, target.y-1, target.x+1, target.y+1);
+
+    var candidates = this.findPointsWithin(searchBox);
+
+    while (candidates.length === 0) {
+	searchBox.expand();
+	candidates = this.findPointsWithin(searchBox);
+    }
+
+    var best = null;
+    var lowestDistance = Infinity;
+
+    var distance = function(a, b) {
+	return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    }
+
+    for (var i in candidates) {
+	var dist = distance(candidates[i], target);
+	if (dist < lowestDistance) {
+	    best = candidates[i];
+	    lowestDistance = dist;
+	}
+    }
+
+    return best;
 
 };
 
