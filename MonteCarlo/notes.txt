@@ -1,0 +1,8 @@
+Monte Carlo integration
+=======================
+
+Have a shape with unknown properties - how to find area?
+
+Sample many points on graph - check how many points are inside the shape
+
+Check percentage of points inside the shape

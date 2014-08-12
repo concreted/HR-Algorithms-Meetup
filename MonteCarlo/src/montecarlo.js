@@ -27,8 +27,69 @@
     * 
 */
 
+var makeNumInRange = function(lower, upper) {
+    return Math.random() * (Math.abs(lower) + Math.abs(upper)) + lower;
+}
+
+var area = function(xmin, ymin, xmax, ymax, percentage) {
+    var l = xmax - xmin;
+    var w = ymax - ymin;
+
+    return l * w * percentage;
+}
+
 var integrate = function() {
+    console.time("Integrating");
+    var graph = getGraphDimensions();
+    var tries = 200;
+    var success = 0;
+    /*
+    var xmax = graph.x.min;
+    var ymax = graph.y.min;
+    var xmin = graph.x.max;
+    var ymin = graph.y.max;
+    */
 
-  return 42;
+    var xmax = 0;
+    var ymax = 0;
+    var xmin = 0;
+    var ymin = 0;
+    for (var i = 0; i < tries; i++) {
+	var x = makeNumInRange(graph.x.min, graph.x.max);
+	var y = makeNumInRange(graph.y.min, graph.y.max);
 
+	
+	if (evalPoint(x,y)) {
+	    //success += 1;
+
+	    if (x < xmin) xmin = x;
+	    if (y < ymin) ymin = y;
+	    if (x > xmax) xmax = x;
+	    if (x > ymax) ymax = y;
+	}
+    }
+
+    console.log(xmin + ", " + xmax);
+    console.log(ymin + ", " + ymax);
+
+
+    var xmin = xmin - ((xmin - graph.x.min) * 0.5);
+    var xmax = xmax + ((graph.x.max - xmax) * 0.5);
+    var ymin = ymin - ((ymin - graph.y.min) * 0.5);
+    var ymax = ymax + ((graph.y.max - ymax) * 0.5);
+
+    console.log(xmin + ", " + xmax);
+    console.log(ymin + ", " + ymax);
+
+
+    for (var i = 0; i < tries; i++) {
+	var x = makeNumInRange(xmin, xmax);
+	var y = makeNumInRange(ymin, ymax);
+
+	if (evalPoint(x,y))
+	    success += 1;
+    }
+
+    console.timeEnd("Integrating");
+    return area(xmin, ymin, xmax, ymax, success/(tries))
 };
