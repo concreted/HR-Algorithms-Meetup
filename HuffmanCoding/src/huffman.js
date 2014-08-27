@@ -1,21 +1,70 @@
 // // Given a Huffman tree and a string, encode that string into a new string
 // // consisting only of 1s and 0s, using the code given by the tree.
 var encodeString = function(input, huffmanTree) {
-    console.log(huffmanTree);
+    //console.log(huffmanTree);
     var result = '';
 
     for (var i = 0; i < input.length; i++) {
-	var current = huffmanTree	
+	var currentChar = input[i]
+	var node = huffmanTree;
+	var charCode = '';
+	while(node.left != undefined && node.right != undefined) {
+	    if (node.left.val.indexOf(currentChar) >= 0) {
+		charCode += '0';
+		node = node.left;
+	    }
+	    else if (node.right.val.indexOf(currentChar) >= 0) {
+		charCode += '1';
+		node = node.right;
+	    }
+	    else {
+		console.log("Bad tree/input");
+		return -1;
+	    }
+	}
+	if (node.val[0] === currentChar) {
+	    result += charCode;
+	}
+	else {
+	    console.log("Bad tree/input");
+	    return -1;
+	}
     }
 
-    return 
+    return result;
 };
 
 // // Given a Huffman tree and a string of 1s and 0s, decode that string into
 // // a new, human-readable string, using the code given by the tree.
 var decodeString = function(input, huffmanTree) {
-  return "result";
+    var result = '';
+    var node = huffmanTree;
+
+    //console.log(input);
+    //console.log(huffmanTree);
+
+    for (var i = 0; i < input.length; i++) {
+	//console.log(input[i]);
+
+	if (input[i] === '0') {
+	    node = node.left;
+	}
+	else if (input[i] === '1') {
+	    node = node.right;
+	}
+
+	
+	if (node.left === null && node.right === null) {
+	    result += node.val[0];
+	    node = huffmanTree;
+	}
+
+	//console.log(node);
+    }
+
+    return result;
 };
+
 
 // Given a corpus of text, return a Huffman tree that represents the
 // frequencies of characters in the corpus.
@@ -62,7 +111,7 @@ var makeHuffmanTree = function(corpus) {
 	pq.insert(totalFreq, newNode);
     }
 
-    console.log(pq.peek().val);
+    //console.log(pq.peek().val);
     
     return pq.peek().val;
 };
